@@ -1,80 +1,85 @@
 
-# Audio2TextPro with Summarization
+# Audio2Text with Summarization
 
-This project allows you to convert audio files into text and summarize the extracted text using a Generative Language Model (Google Gemini). It utilizes the power of SpeechRecognition for audio processing and a custom LLM for text summarization. The output can be downloaded in TXT or DOCX formats.
+This project is an audio-to-text conversion tool with additional summarization capabilities, powered by Google's Generative AI. It allows users to upload audio files (in WAV or MP3 format), transcribe the audio to text, and summarize the content. The app also supports downloading the transcribed and summarized text in both TXT and DOCX formats.
 
-## Features
+## **Features**
+- **Audio-to-Text Conversion**: Converts audio files to text using Google Generative AI.
+- **Summarization**: Summarizes the transcribed text for concise understanding.
+- **Download Options**: Download the transcribed or summarized content as TXT or DOCX files.
 
-- Convert audio (MP3, WAV, FLAC) to text using the SpeechRecognition library.
-- Summarize extracted text using a language model.
-- Download the extracted or summarized text in TXT or DOCX formats.
-- Streamlit-based UI for easy interaction.
+## **Tech Stack**
+- **Streamlit**: For creating the interactive web application.
+- **Google Generative AI**: For transcribing and summarizing the audio.
+- **gTTS (Google Text-to-Speech)**: For text-to-speech functionality.
+- **SpeechRecognition**: For converting audio to text using Google's speech recognition API.
+- **Pydub**: For handling audio file manipulations.
+- **Python-docx**: For creating DOCX files.
 
-## Prerequisites
+## **Installation**
 
-- Python 3.10+
-- ffmpeg (required by `pydub` for audio file conversion)
+### Prerequisites
 
-## Installation
+- Python 3.6 or higher.
+- Google API Key for accessing Google's Generative AI services.
 
-1. Clone the repository:
+### Steps to Set Up
+
+1. **Clone the Repository:**
    ```bash
-   git clone https://github.com/PriyanshuDey23/Audio2TextPro.git
-   cd audio2text-summarization
+   git clone git clone https://github.com/PriyanshuDey23/Audio2TextPro.git
+   cd Audio2Text-with-Summarization
    ```
 
-2. Create a virtual environment (optional but recommended):
+2. **Create and activate a virtual environment (optional but recommended):**
    ```bash
-   python3.10 -m venv venv
-   source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+   python -m venv venv
+   source venv/bin/activate  # On Windows use 'venv\Scripts\activate'
    ```
 
-3. Install the required dependencies:
+3. **Install the required dependencies:**
    ```bash
    pip install -r requirements.txt
    ```
 
-4. Install ffmpeg:
-   - **Windows**: Download `ffmpeg` from [ffmpeg.org](https://ffmpeg.org/download.html) and add the `bin` folder to your system’s PATH.
-   - **macOS**: Install via Homebrew:
-     ```bash
-     brew install ffmpeg
-     ```
-   - **Linux**: Install via package manager:
-     ```bash
-     sudo apt-get install ffmpeg
+4. **Set up your environment variables:**
+   - Create a `.env` file in the root directory of the project.
+   - Add your Google API key:
+     ```env
+     GOOGLE_API_KEY=your_google_api_key_here
      ```
 
-## Environment Variables
-
-You will need to set up your Google API key to interact with the Google Gemini model. Create a `.env` file in the root directory of the project with the following content:
-
-```
-GOOGLE_API_KEY=your_google_api_key_here
-```
-
-## Running the Application
-
-1. Start the Streamlit app:
+5. **Run the Streamlit app:**
    ```bash
    streamlit run app.py
    ```
 
-2. Open your browser and go to `http://localhost:8501` to interact with the application.
+### **Usage**
 
-## Usage
+- Upload an audio file (WAV or MP3 format).
+- Choose either to transcribe the audio to text or summarize the content.
+- View the extracted or summarized text and download it as TXT or DOCX files.
 
-1. Upload an audio file (MP3, WAV, or FLAC).
-2. Choose whether you want to:
-   - Convert the audio to text.
-   - Summarize the extracted text.
-3. The extracted or summarized text will appear on the screen.
-4. You can download the text in TXT or DOCX format.
+## **File Structure**
 
-## Contributing
+```plaintext
+Audio2Text-with-Summarization/
+├── app.py               # Main Streamlit app file
+├── helper.py            # Helper functions for processing audio
+├── utils.py             # Utilities for converting text to TXT/DOCX
+├── requirements.txt     # Python dependencies
+├── .env                 # Environment variables (for storing API keys)
+└── README.md            # Project documentation
+```
 
-Feel free to fork the repository, make changes, and create pull requests. If you encounter any issues, please open an issue in the repository.
+## **Contributing**
 
-## License
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature-name`).
+3. Commit your changes (`git commit -am 'Add new feature'`).
+4. Push to the branch (`git push origin feature-name`).
+5. Open a pull request.
+
+## **License**
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

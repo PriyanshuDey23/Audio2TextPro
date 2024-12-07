@@ -1,66 +1,65 @@
 import streamlit as st
-from Audio_To_Text.utils import extract_audio_from_file, convert_to_txt, convert_to_docx
-from Audio_To_Text.helper import audio_to_text, llm_model
+from Audio_To_Text.utils import convert_to_txt, convert_to_docx
+from Audio_To_Text.helper import save_uploaded_file, summarize_audio, audio_to_text
 
-# Streamlit App UI
+# Streamlit App Configuration
 st.set_page_config(page_title="Audio2Text with Summarization", layout="centered")
-st.header("Audio2Text with Summarization")
+st.title("Audio2Text with Summarization")
 
-# Function to handle audio file upload
-def get_audio_input():
-    return st.file_uploader("Upload an audio file", type=["mp3", "wav", "flac"])
 
-# Display the upload section
-uploaded_audio = get_audio_input()
 
-if uploaded_audio:
-    st.audio(uploaded_audio, format="audio/mp3")
-
-    # Convert uploaded audio to WAV for processing
+# Upload audio file with file size limit (50 MB)
+audio_file = st.file_uploader("Upload Audio File", type=["wav", "mp3"])
+if audio_file is not None:
+    # Save and display uploaded audio
     try:
-        audio_wav = extract_audio_from_file(uploaded_audio)
+        audio_path = save_uploaded_file(audio_file)
+        st.audio(audio_path)
     except ValueError as e:
-        st.error(str(e))
+        st.error(f"Error saving the uploaded file: {e}")
         st.stop()
 
-    # Provide options for action
+    # Action selection
     action = st.radio(
-        "What would you like to do with the text?",
-        ("Convert to Text", "Summarize the Text")
+        "What would you like to do?",
+        ("Convert to Text", "Summarize the Audio")
     )
 
+    # Button to process audio
     if st.button("Process Audio"):
-        st.info("Processing audio...")
-        extracted_text = audio_to_text(audio_wav)
-
-        if action == "Summarize the Text":
-            summarized_text = llm_model(extracted_text)
-            st.text_area("Summarized Text", summarized_text, height=300)
-            st.download_button(
-                label="Download as TXT",
-                data=convert_to_txt(summarized_text),
-                file_name="summarized_text.txt",
-                mime="text/plain",
-            )
-            st.download_button(
-                label="Download as DOCX",
-                data=convert_to_docx(summarized_text),
-                file_name="summarized_text.docx",
-                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-            )
-        else:
-            st.text_area("Extracted Text", extracted_text, height=300)
-            st.download_button(
-                label="Download as TXT",
-                data=convert_to_txt(extracted_text),
-                file_name="extracted_text.txt",
-                mime="text/plain",
-            )
-            st.download_button(
-                label="Download as DOCX",
-                data=convert_to_docx(extracted_text),
-                file_name="extracted_text.docx",
-                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-            )
+        with st.spinner("Processing..."):
+            try:
+                if action == "Convert to Text":
+                    extracted_text = audio_to_text(audio_path)
+                    st.text_area("Extracted Text", extracted_text, height=300)
+                    st.download_button(
+                        label="Download as TXT",
+                        data=convert_to_txt(extracted_text),
+                        file_name="extracted_text.txt",
+                        mime="text/plain",
+                    )
+                    st.download_button(
+                        label="Download as DOCX",
+                        data=convert_to_docx(extracted_text),
+                        file_name="extracted_text.docx",
+                        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    )
+                elif action == "Summarize the Audio":
+                    summarized_text = summarize_audio(audio_path)
+                    st.text_area("Summarized Text", summarized_text, height=300)
+                    st.download_button(
+                        label="Download as TXT",
+                        data=convert_to_txt(summarized_text),
+                        file_name="summarized_text.txt",
+                        mime="text/plain",
+                    )
+                    st.download_button(
+                        label="Download as DOCX",
+                        data=convert_to_docx(summarized_text),
+                        file_name="summarized_text.docx",
+                        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    )
+            except ValueError as e:
+                st.error(f"Error processing the audio: {e}")
 else:
     st.info("Please upload an audio file to get started.")

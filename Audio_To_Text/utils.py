@@ -1,30 +1,20 @@
-from pydub import AudioSegment
 import io
 from docx import Document
 
-# Function to convert any audio file to WAV format
-def extract_audio_from_file(audio_file):
-    try:
-        audio = AudioSegment.from_file(audio_file)
-        audio_wav = io.BytesIO()
-        audio.export(audio_wav, format="wav")
-        audio_wav.seek(0)  # Reset the pointer to the start of the file
-        return audio_wav
-    except Exception as e:
-        raise ValueError(f"Error processing audio file: {e}")
-
 # Function to convert text to a TXT file
 def convert_to_txt(response):
+    """Convert the text response to a TXT format."""
     try:
-        return str(response).encode('utf-8', errors='ignore')
+        return str(response).encode("utf-8", errors="ignore")
     except Exception as e:
         raise ValueError(f"Error converting to TXT: {e}")
 
 # Function to convert text to a DOCX file
 def convert_to_docx(response):
+    """Convert the text response to a DOCX format."""
     try:
         doc = Document()
-        doc.add_heading("Translated", 1)
+        doc.add_heading("Summary", level=1)
         doc.add_paragraph(response)
         file_stream = io.BytesIO()
         doc.save(file_stream)
